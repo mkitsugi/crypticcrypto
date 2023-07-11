@@ -18,11 +18,13 @@ import {
   Alert,
   AlertIcon,
   Link as ChakraLink,
+  Spinner,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
 const PuzzlePage = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const {
@@ -32,6 +34,8 @@ const PuzzlePage = () => {
   } = useDisclosure();
 
   const [remainingAttempts, setRemainingAttempts] = useState(3);
+
+  const [address, setAddress] = useState("");
 
   const prize = 5000;
   const unit = " Satoshi";
@@ -72,12 +76,14 @@ const PuzzlePage = () => {
   };
 
   const handleSubmit = async () => {
+    setIsLoading(true);
+
     if (answer === problemSet.answer) {
       try {
-        const response = await axios.post("/api/run-script", {
+        const response = await axios.post("/api/run_script", {
           scriptPath:
             "/Users/kisukidaiki/myport/crypticcrypto/LangChainBitcoin/__init__.py",
-          args: "lntb1u1pj2mdhxpp5h30xatzt8lrw84dned33msc26f2ajrk4cgmgs59d9ql5e6w3q48sdqqcqzzsxqyz5vqsp55xee4shzl6wu6u5f0q6dk5dv5l3rncg7v43hz468j3e6tegcnsmq9qyyssqcpt2ujjdfhrx2q55m0zzxf95vd0lfxhxtsxd0wlyne7wxzdzw7cz07rvnkjd33w4rmmd95h6d0ujytxdswk9x5p6s0n80syuqjr20tgquewxvz",
+          args: address,
         });
         console.log("Python script executed successfully");
         // 処理結果を利用するための追加の処理をここに記述することができます
@@ -88,6 +94,7 @@ const PuzzlePage = () => {
     } else {
       setRemainingAttempts((prevAttempts) => prevAttempts - 1);
     }
+    setIsLoading(false);
     onClose();
   };
 
@@ -187,31 +194,43 @@ const PuzzlePage = () => {
           <ModalHeader>回答する</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Text mb={3} fontWeight={"700"}>
-              回答内容
-            </Text>
-            <Input
-              placeholder="回答を入力..."
-              mb={6}
-              onChange={handleAnswerChange}
-            />
-            <Text mb={3} fontWeight={"700"}>
-              賞金を受け取るアドレス
-            </Text>
-            <Input placeholder="アドレスを入力..." />
+            {isLoading ? (
+              <Flex direction="column" align="center" justify="center">
+                <Spinner my={2} mb={10} />
+              </Flex>
+            ) : (
+              <>
+                <Text mb={3} fontWeight={"700"}>
+                  回答内容
+                </Text>
+                <Input
+                  placeholder="回答を入力..."
+                  mb={6}
+                  onChange={handleAnswerChange}
+                />
+                <Text mb={3} fontWeight={"700"}>
+                  賞金を受け取るアドレス
+                </Text>
+                <Input
+                  placeholder="アドレスを入力..."
+                  onChange={(e) => setAddress(e.target.value)}
+                />
+              </>
+            )}
           </ModalBody>
-
-          <ModalFooter>
-            <Button
-              colorScheme="blue"
-              mr={3}
-              width={"100%"}
-              onClick={handleSubmit}
-              disabled={isSubmitDisabled}
-            >
-              回答を確定する
-            </Button>
-          </ModalFooter>
+          {!isLoading && (
+            <ModalFooter>
+              <Button
+                colorScheme="blue"
+                mr={3}
+                width={"100%"}
+                onClick={handleSubmit}
+                disabled={isSubmitDisabled}
+              >
+                回答を確定する
+              </Button>
+            </ModalFooter>
+          )}
         </ModalContent>
       </Modal>
 
