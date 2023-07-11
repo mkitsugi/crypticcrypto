@@ -1,0 +1,65 @@
+.container {
+  background-image: url("/bg.png");
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.titleBox {
+  background: rgb(255, 255, 255);
+  padding: 20px;
+  padding-left: 150px;
+  padding-right: 150px;
+  border-radius: 30px;
+  margin-bottom: 20px;
+}
+
+.title {
+  /* color: black; */
+  background: linear-gradient(to right, red, blue);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 2.3em;
+  font-weight: 700;
+  text-align: center;
+  margin: 0;
+}
+
+.tagline {
+  color: rgb(255, 255, 255);
+  font-size: 1.2em;
+  font-weight: 700;
+  text-align: center;
+  padding-top: 20px;
+}
+
+.verticalLine {
+  height: 100px;
+  border-left: 1px solid rgb(255, 255, 255);
+  margin: 30px;
+}
+
+.buttonBox {
+  background: rgb(0, 0, 0);
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  border-radius: 10px;
+  width: 25rem;
+  transition: transform 0.2s ease;
+}
+
+.button {
+  color: rgb(255, 255, 255);
+  font-size: 1.5em;
+}
+
+.buttonBox:hover {
+  transform: translateY(7px); /* Y方向に移動 */
+}
