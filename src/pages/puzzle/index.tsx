@@ -20,6 +20,7 @@ import {
   Link as ChakraLink,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 const PuzzlePage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -31,6 +32,11 @@ const PuzzlePage = () => {
   } = useDisclosure();
 
   const [remainingAttempts, setRemainingAttempts] = useState(3);
+
+  const prize = 5000;
+  const unit = " Satoshi";
+  const walletAddress = "0x3D...AA";
+  const participantCount = 5; //仮置きでリアルピッチの際は修正
 
   const problemSets = [
     {
@@ -65,19 +71,25 @@ const PuzzlePage = () => {
     setIsSubmitDisabled(inputValue === "");
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (answer === problemSet.answer) {
+      try {
+        const response = await axios.post("/api/run-script", {
+          scriptPath:
+            "/Users/kisukidaiki/myport/crypticcrypto/LangChainBitcoin/__init__.py",
+          args: "lntb1u1pj2mdhxpp5h30xatzt8lrw84dned33msc26f2ajrk4cgmgs59d9ql5e6w3q48sdqqcqzzsxqyz5vqsp55xee4shzl6wu6u5f0q6dk5dv5l3rncg7v43hz468j3e6tegcnsmq9qyyssqcpt2ujjdfhrx2q55m0zzxf95vd0lfxhxtsxd0wlyne7wxzdzw7cz07rvnkjd33w4rmmd95h6d0ujytxdswk9x5p6s0n80syuqjr20tgquewxvz",
+        });
+        console.log("Python script executed successfully");
+        // 処理結果を利用するための追加の処理をここに記述することができます
+      } catch (error) {
+        console.error("Failed to execute Python script:", error);
+      }
       onCorrectModalOpen();
     } else {
       setRemainingAttempts((prevAttempts) => prevAttempts - 1);
     }
     onClose();
   };
-
-  const prize = 5000;
-  const unit = " Satoshi";
-  const walletAddress = "0x3D...AA";
-  const participantCount = 5; //仮置きでリアルピッチの際は修正
 
   return (
     <Flex
